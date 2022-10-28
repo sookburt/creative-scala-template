@@ -8,7 +8,9 @@ import scala.concurrent.duration._
 import cats.effect.unsafe.implicits.global
 import scala.collection.mutable.ArrayBuffer
 
-object Histogram {
+object Chapter_6_Methods {
+
+  case class HistogramBar(val delivered: Int, val numRecipients:Int) {}
 
   def barCreator(record: HistogramBar):Image = {
     Image.rectangle(10, record.delivered).fillColor(Color.blue.spin((record.numRecipients/1000).degrees))
@@ -44,6 +46,5 @@ object Histogram {
     val output = graph.above(Image.rectangle(220,2).fillColor(Color.black))
     output.draw(); // TODO: get it laying on the baseline somehow.
   }
-
-
 }
+
