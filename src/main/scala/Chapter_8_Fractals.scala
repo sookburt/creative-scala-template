@@ -8,17 +8,30 @@ import cats.effect.unsafe.implicits.global
 
 object Chapter_8_Fractals {
 
+  /**
+   * Moving basecase into it's own method so that we only create it once.
+   * @param count
+   * @return
+   */
   def chessboard(count: Int): Image = {
-    val blackSquare = Image.rectangle(10, 10).fillColor(Color.black)
-    val redSquare = Image.rectangle(10, 10).fillColor(Color.red)
+    val baseCase = {
+      println("printing chessboard basecase.")
+      val blackSquare = Image.rectangle(10, 10).fillColor(Color.black)
+      val redSquare = Image.rectangle(10, 10).fillColor(Color.red)
+      (redSquare.beside(blackSquare)).above(blackSquare.beside(redSquare))
+    }
 
-    count match {
-      case 0 => (redSquare.beside(blackSquare)).above(blackSquare.beside(redSquare))
-      case n => {
-        val unit = chessboard(n - 1)
-        (unit.beside(unit).above(unit.beside(unit)))
+    def loop(count: Int): Image = {
+      count match {
+        case 0 => baseCase
+        case n => {
+          val unit = loop(n - 1)
+          (unit.beside(unit).above(unit.beside(unit)))
+        }
       }
     }
+
+    loop(count)
   }
 
   def sierpinski(count: Int): Image = {
@@ -80,13 +93,13 @@ object Chapter_8_Fractals {
 
   def main(args: Array[String]): Unit = {
 
-    fadeConcentricCircles(20, 100, Color.mediumBlue).draw()
+    //fadeConcentricCircles(20, 100, Color.mediumBlue).draw()
     //rainbowConcentricCircles(20, 100, Color.mediumBlue).draw()
     //plainConcentricCircles(20, 100, Color.mediumBlue).draw()
     //colorChangeBoxes(5, 10).draw()
     //growingBoxes(7, 10).draw()
     //sierpinski(3).draw()
-    //chessboard(0).draw() // Not sure the base finishes properly
+    chessboard(0).draw() // Not sure the base finishes properly
 
   }
 }

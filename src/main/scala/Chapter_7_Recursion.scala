@@ -58,16 +58,31 @@ object Chapter_7_Recursion {
   }
 
   def cross(count: Int): Image = {
-    val target = Image.circle(5).noStroke.fillColor(Color.yellow).on(Image.circle(15).noStroke.fillColor(Color.green).on(Image.circle(25).noStroke.fillColor(Color.blue)))
-    count match {
+    val target = {
+      println("Creating the target")
+      Image.circle(5)
+        .noStroke
+        .fillColor(Color.yellow.fadeOutBy(0.05.normalized))
+        .on(Image.circle(15)
+          .noStroke
+          .fillColor(Color.green.fadeOutBy(0.05.normalized))
+          .on(Image.circle(25)
+            .noStroke
+            .fillColor(Color.blue.fadeOutBy(0.05.normalized))))
+    }
+
+    def loop(count: Int): Image = {
+      count match {
       case 0 => Image.regularPolygon(6, 10.0).strokeColor(Color.red).strokeWidth(5)
       case n => {
-        val unit = cross(n - 1)
-        target.above(((target.beside(unit.beside(target)))).above(target))
+        val unit = loop(n-1)
+        target.above((target.beside(unit.beside(target))).above(target))
+        }
       }
     }
-  }
 
+    loop(count)
+  }
   def main(args: Array[String]): Unit = {
     //threeBoxes.draw()
     //boxes(10).draw()
