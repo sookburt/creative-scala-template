@@ -8,8 +8,6 @@ import cats.effect.unsafe.implicits.global
 
 object Chapter_8_Fractals {
 
-  // Fractals.
-
   def chessboard(count: Int): Image = {
     val blackSquare = Image.rectangle(10, 10).fillColor(Color.black)
     val redSquare = Image.rectangle(10, 10).fillColor(Color.red)
@@ -34,9 +32,60 @@ object Chapter_8_Fractals {
     }
   }
 
+  def growingBoxes(count: Int, size: Int): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => Image.square(size).noStroke.fillColor(Color.blue.spin((n*40).degrees)).beside(growingBoxes(n-1, size+10));
+    }
+  }
+
+  def colorChangeBoxes(count: Int, color: Int): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => (Image.square(50)
+                  .strokeColor(Color.blue.spin((color+10).degrees))
+                  .strokeWidth(10)
+                  .fillColor(Color.blue.spin((color-10).degrees)))
+                  .beside(colorChangeBoxes(n-1, color+10))
+    }
+  }
+
+  def circle(size: Int, color: Color): Image = {
+    Image.circle(size).strokeWidth(3.0).strokeColor(color).noFill
+  }
+  def plainConcentricCircles(count: Int, size: Int, color: Color): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => plainConcentricCircles(n-1, size+15, color)
+                  .on(circle(size, color))
+    }
+  }
+  def rainbowConcentricCircles(count: Int, size: Int, color: Color): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => {
+        rainbowConcentricCircles(n - 1, size + 15, color.spin((n + 10).degrees))
+          .on(circle(size, color))
+      }
+    }
+  }
+
+  def fadeConcentricCircles(count: Int, size: Int, color: Color): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => fadeConcentricCircles(n-1, size + 15, color.spin((n + 8).degrees).fadeOutBy(0.05.normalized))
+                .on(circle(size, color))
+    }
+  }
+
   def main(args: Array[String]): Unit = {
 
-    sierpinski(3).draw()
+    fadeConcentricCircles(20, 100, Color.mediumBlue).draw()
+    //rainbowConcentricCircles(20, 100, Color.mediumBlue).draw()
+    //plainConcentricCircles(20, 100, Color.mediumBlue).draw()
+    //colorChangeBoxes(5, 10).draw()
+    //growingBoxes(7, 10).draw()
+    //sierpinski(3).draw()
     //chessboard(0).draw() // Not sure the base finishes properly
 
   }
