@@ -9,7 +9,7 @@ import cats.effect.unsafe.implicits.global
 object Chapter_8_Fractals {
 
   /**
-   * Moving basecase into it's own method so that we only create it once.
+   * Moving basecase into it's own method so that we only create it once, not each recursion.
    * @param count
    * @return
    */
@@ -99,7 +99,7 @@ object Chapter_8_Fractals {
     //colorChangeBoxes(5, 10).draw()
     //growingBoxes(7, 10).draw()
     //sierpinski(3).draw()
-    chessboard(0).draw() // Not sure the base finishes properly
+    chessboard(0).draw() 
 
   }
 }
